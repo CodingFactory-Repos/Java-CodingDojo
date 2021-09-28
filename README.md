@@ -9,26 +9,29 @@ $ src/main/java/fr/rphstudio/codingdojo/students/StudentX.java
 ```
 
 ## How to run game ?
-# MacOS
+### MacOS
 
 > Run Terminal.app
 ```sh
 $ sh resources/run_mac.sh
 ```
 
-# Linux
+### Linux
 
 > Run Terminal
 ```sh
 $ sh resources/run_linux.sh
 ```
 
-# Windows
+### Windows
 
 > Run CMD
 ```bash
 $ ./resources/run_windows.bat
 ```
+
+## Initial project
+https://github.com/Romuald78/codingdojo_studentplugin
 
 ## Contributing
 This repository is the result of a school evaluation. It is therefore unnecessary to contribute to this project.
