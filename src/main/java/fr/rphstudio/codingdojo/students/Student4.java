@@ -26,7 +26,6 @@ public class Student4 extends PodPlugIn {
         return a <= 30;
     }
 
-
     // All variables
 
 
@@ -49,18 +48,13 @@ public class Student4 extends PodPlugIn {
 
 
         // Check if the battery is below 30%.
-        // If battry < 30% go to Charging CkeckPoint
+        // If battery < 30% go to Charging CkeckPoint
         // Otherwise continue as normal
         if(updateChargingMode(getShipBatteryLevel())) {
-            turnTowardFirstChargingCheckPoint();
+            turnTowardPosition(getFirstChargingCheckPointX(),getFirstChargingCheckPointY());
         } else {
-            turnTowardNextCheckPoint();
+            turnTowardPosition(getNextCheckPointX(),getNextCheckPointY());
         }
-
-         System.out.println(getShipBatteryLevel());
-
-
-
 
         // END OF CODE AREA
         //-------------------------------------------------------
