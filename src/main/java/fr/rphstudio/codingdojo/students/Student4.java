@@ -26,10 +26,10 @@ public class Student4 extends PodPlugIn {
 
     // Create updateChargingMode function to check if battery
     public boolean getUpdateChargingMode(float a) {
-        if(a <= 30 && !needForRecharge){
+        if(a <= 15 && !needForRecharge){
             needForRecharge = true;
             return true;
-        } else if(a >= 90 && needForRecharge){
+        } else if(a >= 97 && needForRecharge){
             needForRecharge = false;
             return false;
         } else if(needForRecharge){
@@ -70,11 +70,11 @@ public class Student4 extends PodPlugIn {
         if (getUpdateChargingMode(getShipBatteryLevel())) {
             // If the battery is above 30% go to Charging CkeckPoint
             turnTowardPosition(getCheckPointX(checkPointCharging(getNbRaceCheckPoints())), getCheckPointY(checkPointCharging(getNbRaceCheckPoints())));
-            accelerateOrBrake(0.3f);
+            accelerateOrBrake(0.40f);
         } else {
             // If the battery is above 30%, go to a normal checkpoint
             turnTowardPosition(getCheckPointX(getNextCheckPointIndex()), getCheckPointY(getNextCheckPointIndex()));
-            accelerateOrBrake(0.8f);
+            accelerateOrBrake(0.90f);
         }
 
         //
