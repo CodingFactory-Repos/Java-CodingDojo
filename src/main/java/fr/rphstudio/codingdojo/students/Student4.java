@@ -22,14 +22,24 @@ public class Student4 extends PodPlugIn {
 
     //-------------------------------------------------------
     // DECLARE YOUR OWN VARIABLES AND FUNCTIONS HERE
-    //-------------------------------------------------------
-
+    //
 
     // Create updateChargingMode variable to check if battery
     public static boolean updateChargingMode(float a){
         return a <= 30;
     }
 
+
+    public int checkpointCharging(int a) {
+        for(int i = 1; i <= a; i++) {
+            if (isCheckPointCharging(i)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    //
     // END OF VARIABLES/FUNCTIONS AREA
     //-------------------------------------------------------
 
@@ -38,12 +48,11 @@ public class Student4 extends PodPlugIn {
     {
         //-------------------------------------------------------
         // WRITE YOUR OWN CODE HERE
+        //
 
         setPlayerName("Wallah tu es trop beau");
         selectShip(1);
         setPlayerColor(247, 143, 179,255);
-
-        accelerateOrBrake(1f);
         // getFirstChargingCheckPointIndex();
 
         //moveAndRecharge(1f, 0, 100);
@@ -52,14 +61,16 @@ public class Student4 extends PodPlugIn {
         // If battery < 30% go to Charging CkeckPoint
         // Otherwise continue as normal
         if(updateChargingMode(getShipBatteryLevel())) {
-            turnTowardPosition(getCheckPointX(getFirstChargingCheckPointIndex()),getCheckPointY(getFirstChargingCheckPointIndex()));
+            turnTowardPosition(getCheckPointX(checkpointCharging(getNbRaceCheckPoints())),getCheckPointY(checkpointCharging(getNbRaceCheckPoints())));
+            accelerateOrBrake(0.5f);
         } else {
             turnTowardPosition(getCheckPointX(getNextCheckPointIndex()),getCheckPointY(getNextCheckPointIndex()));
+            accelerateOrBrake (1f);
         }
 
-        //-------------------------------------------------------
+        //
         // END OF CODE AREA
         //-------------------------------------------------------
     }
-    
+
 }
