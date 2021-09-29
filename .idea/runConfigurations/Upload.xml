@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Upload" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="fr.rphstudio.codingdojo.launcher.MainLauncher" />
+    <module name="Student4" />
+    <option name="PROGRAM_PARAMETERS" value="-window" />
+    <option name="VM_PARAMETERS" value="-Djava.library.path=lib -cp ./*:students/*" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/resources" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean install" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="antrun:run@upload" />
+    </method>
+  </configuration>
+</component>
