@@ -22,7 +22,8 @@ public class Student4 extends PodPlugIn {
 
     //-------------------------------------------------------
     // DECLARE YOUR OWN VARIABLES AND FUNCTIONS HERE
-;    //
+    //-------------------------------------------------------
+
 
     // Create updateChargingMode variable to check if battery
     public static boolean updateChargingMode(float a){
