@@ -22,7 +22,6 @@ public class Student4 extends PodPlugIn {
     // DECLARE YOUR OWN VARIABLES AND FUNCTIONS HERE
 
     
-    
     // END OF VARIABLES/FUNCTIONS AREA
     //-------------------------------------------------------
     
@@ -32,11 +31,11 @@ public class Student4 extends PodPlugIn {
         //-------------------------------------------------------
         // WRITE YOUR OWN CODE HERE
         
-        setPlayerName("Student 4");
+        setPlayerName("Wallah tu es trop beau");
         selectShip(1);
         setPlayerColor(255,255,255,255);
 
-        moveAndRecharge(0.75f, 20, 85);
+        moveAndRecharge(1f, 0, 100);
 
         // END OF CODE AREA
         //-------------------------------------------------------
