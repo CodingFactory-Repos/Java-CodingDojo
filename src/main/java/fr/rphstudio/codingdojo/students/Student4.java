@@ -9,8 +9,6 @@ package fr.rphstudio.codingdojo.students;
 import fr.rphstudio.codingdojo.game.Pod;
 import fr.rphstudio.codingdojo.game.PodPlugIn;
 
-import java.lang.reflect.Array;
-
 /**
  *
  * @author Romuald GRIGNON
@@ -22,12 +20,14 @@ public class Student4 extends PodPlugIn {
     
     //-------------------------------------------------------
     // DECLARE YOUR OWN VARIABLES AND FUNCTIONS HERE
-;    //
 
     // Create updateChargingMode variable to check if battery
     public static boolean updateChargingMode(float a){
         return a <= 30;
     }
+
+    // All variables
+
 
     // END OF VARIABLES/FUNCTIONS AREA
     //-------------------------------------------------------
@@ -43,21 +43,18 @@ public class Student4 extends PodPlugIn {
         setPlayerColor(247, 143, 179,255);
 
         accelerateOrBrake(1f);
-        // getFirstChargingCheckPointIndex();
 
         //moveAndRecharge(1f, 0, 100);
+
 
         // Check if the battery is below 30%.
         // If battery < 30% go to Charging CkeckPoint
         // Otherwise continue as normal
         if(updateChargingMode(getShipBatteryLevel())) {
-            turnTowardPosition(getCheckPointX(getFirstChargingCheckPointIndex()),getCheckPointY(getFirstChargingCheckPointIndex()));
+            turnTowardPosition(getFirstChargingCheckPointX(),getFirstChargingCheckPointY());
         } else {
-            turnTowardPosition(getCheckPointX(getNextCheckPointIndex()),getCheckPointY(getNextCheckPointIndex()));
+            turnTowardPosition(getNextCheckPointX(),getNextCheckPointY());
         }
-
-        System.out.println();
-
 
         // END OF CODE AREA
         //-------------------------------------------------------
