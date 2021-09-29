@@ -21,7 +21,15 @@ public class Student4 extends PodPlugIn {
     //-------------------------------------------------------
     // DECLARE YOUR OWN VARIABLES AND FUNCTIONS HERE
 
-    
+    // Create updateChargingMode variable to check if battery
+    public static boolean updateChargingMode(float a){
+        return a <= 30;
+    }
+
+
+    // All variables
+
+
     // END OF VARIABLES/FUNCTIONS AREA
     //-------------------------------------------------------
     
@@ -33,9 +41,26 @@ public class Student4 extends PodPlugIn {
         
         setPlayerName("Wallah tu es trop beau");
         selectShip(1);
-        setPlayerColor(255,255,255,255);
+        setPlayerColor(247, 143, 179,255);
 
-        moveAndRecharge(1f, 0, 100);
+        accelerateOrBrake(1f);
+
+        //moveAndRecharge(1f, 0, 100);
+
+
+        // Check if the battery is below 30%.
+        // If battry < 30% go to Charging CkeckPoint
+        // Otherwise continue as normal
+        if(updateChargingMode(getShipBatteryLevel())) {
+            turnTowardFirstChargingCheckPoint();
+        } else {
+            turnTowardNextCheckPoint();
+        }
+
+         System.out.println(getShipBatteryLevel());
+
+
+
 
         // END OF CODE AREA
         //-------------------------------------------------------
