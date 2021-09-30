@@ -25,6 +25,8 @@ public class  Student4 extends PodPlugIn {
     public static boolean needForRecharge = false;
     public static float checkPointX;
     public static float checkPointY;
+    public static float nextCheckPointX;
+    public static float nextCheckPointY;
 
     public static float chargingCheckPointX;
     public static float chargingCheckPointY;
@@ -34,11 +36,14 @@ public class  Student4 extends PodPlugIn {
 
     public static float shipAngle;
 
-    public static float tang;
-    public static float chargingTang;
-
     public static float absoluteAngle;
+    public static float nextAbsoluteAngle;
     public static float relativeAngle;
+    public static float nextRelativeAngle;
+
+    public static float relativeAngleDifference;
+    public static float nextRelativeAngleDifference;
+    public static float chargingRelativeAngleDifference;
 
     public static float chargingAbsoluteAngle;
     public static float chargingRelativeAngle;
@@ -73,10 +78,16 @@ public class  Student4 extends PodPlugIn {
         return x0 - x1;
     }
 
-    public float goToChargingCheckpoint(float xShip, float xCheckpoint){
-        float radius = xShip - xCheckpoint;
+    public float goToChargingCheckpoint(){
+        float radius = shipPositionX - chargingCheckPointX;
 
-        double[][] speed = { { 0.2, -1f }, { 0.5, 0.1f }, { 1, 0.5f } };
+        double[][] speed = { { 0.1, -1f }, { 0.5, 0.05f }, { 1, 0.5f }, {5, 0.6} };
+
+        if(radius <= speed[0][0] && radius >= -speed[0][0]){
+            turn(relativeAngle);
+        } else {
+            turn(chargingRelativeAngle);
+        }
 
         for (int i = 0; i < speed.length; i++){
             if (radius <= speed[i][0] && radius >= -speed[i][0]){ // If the radius is between 0.75 and -0.75
@@ -86,23 +97,22 @@ public class  Student4 extends PodPlugIn {
         }
 
         return 1f;
-
-        //if (radius <= 0.20 && radius >= -0.20){ // If the radius is between 0.75 and -0.75
-        //    return -1f;
-        //} else if (radius <= 0.50 && radius >= -0.50){ // If the radius is between 0.75 and -0.75
-        //    return 0.1f;
-        //} else if (radius <= 1 && radius >= -1){ // If the radius is between 0.75 and -0.75
-        //    return 0.5f;
-        //}
     }
 
-    public float goToCheckpoint(float xShip, float xCheckpoint, float yShip, float yCheckpoint){
-        float radiusX = xShip - xCheckpoint;
-        float radiusY = yShip - yCheckpoint;
+    public float goToCheckpoint(){
+        float radiusX = shipPositionX - checkPointX;
+        float radiusY = shipPositionY - checkPointY;
 
-        double[][] speed = { { 0.5, -0.5f }, { 1, 0.05f }, { 2, 0.20f }, { 2.5, 0.30f }, { 3, 0.50 } };
+        double[][] speed = { { 0.5, -0.9f }, {1, -0.5f} };
 
-        for (int i = 0; i < speed.length; i++){
+        //if(radiusX <= 1 && radiusX >= -1 && radiusY <= 1 && radiusY >= -1){
+        //    turn(nextRelativeAngle);
+        //   return  -0.75f;
+        //} else {
+            turn(relativeAngle);
+        //}
+
+        for(int i = 0; i < speed.length; i++){
             if (radiusX <= speed[i][0] && radiusX >= -speed[i][0] && radiusY <= speed[i][0] && radiusY >= -speed[i][0]){ // If the radius is between 0.75 and -0.75
                 System.out.println(speed[i][1] + "f " + radiusX + ":" + radiusY);
                 return (float) speed[i][1];
@@ -110,20 +120,19 @@ public class  Student4 extends PodPlugIn {
         }
 
         return 1f;
+    }
 
-        //if (radiusX <= 0.50 && radiusX >= -0.50 && radiusY <= 0.50 && radiusY >= -0.50){ // If the radius is between 0.75 and -0.75
-        //    System.out.println("-0.5f " + radiusX + ":" + radiusY);
-        //    return -0.5f;
-        //} else if (radiusX <= 1 && radiusX >= -1 && radiusY <= 1 && radiusY >= -1){
-        //    System.out.println("0.05f " + radiusX + ":" + radiusY);
-        //    return 0.05f;
-        //} else if (radiusX <= 2 && radiusX >= -2 && radiusY <= 2 && radiusY >= -2){ // If the radius is between 0.75 and -0.75
-        //    System.out.println("0.30f " + radiusX + ":" + radiusY);
-        //    return 0.30f;
-        //} else if (radiusX <= 2.5 && radiusX >= -2.5 && radiusY <= 2.5 && radiusY >= -2.5){
-        //    System.out.println("0.75f " + radiusX + ":" + radiusY);
-        //    return 0.75f;
-        //}
+    public float relativeAngleDifference(float a, float b) {
+        float radius = b - a;
+        if (radius > 180.0f) {
+            radius -= 360.0f;
+        }
+
+        if (radius < -180.0f) {
+            radius += 360.0f;
+        }
+
+        return radius;
     }
 
     //
@@ -149,6 +158,14 @@ public class  Student4 extends PodPlugIn {
         checkPointX = getCheckPointX(getNextCheckPointIndex());
         checkPointY = getCheckPointY(getNextCheckPointIndex());
 
+        try {
+            nextCheckPointX = getCheckPointX(getNextCheckPointIndex() + 1);
+            nextCheckPointY = getCheckPointY(getNextCheckPointIndex() + 1);
+        } catch (Exception e){
+            nextCheckPointX = getCheckPointX(0);
+            nextCheckPointY = getCheckPointY(0);
+        }
+
         // charging checkpoint variables (return positions)
         chargingCheckPointX = getCheckPointX(checkPointCharging(getNbRaceCheckPoints()));
         chargingCheckPointY = getCheckPointY(checkPointCharging(getNbRaceCheckPoints()));
@@ -159,18 +176,32 @@ public class  Student4 extends PodPlugIn {
 
         shipAngle = getShipAngle(getShipIndex());
 
-        tang =  atan2(checkPointY-shipPositionY , checkPointX-shipPositionX);
-        chargingTang =  atan2(chargingCheckPointY-shipPositionY , chargingCheckPointX-shipPositionX);
+        relativeAngleDifference = (absoluteAngle - shipAngle) ;
+        nextRelativeAngleDifference = (nextAbsoluteAngle - shipAngle) ;
+        chargingRelativeAngleDifference = (chargingAbsoluteAngle - shipAngle);
         //tang =  atan2(checkPointY-shipPositionY , checkPointX-shipPositionX);
 
 
         //  normal check point
-        absoluteAngle =  tang;
-        relativeAngle = getRelativeAngleDifference(shipAngle, absoluteAngle);
+        absoluteAngle = atan2(checkPointY-shipPositionY , checkPointX-shipPositionX);
+        nextAbsoluteAngle = atan2(nextCheckPointY-shipPositionY , nextCheckPointX-shipPositionX);
+        chargingAbsoluteAngle = atan2(chargingCheckPointY-shipPositionY , chargingCheckPointX-shipPositionX);
+
+        relativeAngle = relativeAngleDifference(shipAngle, absoluteAngle);
+        nextRelativeAngle = relativeAngleDifference(shipAngle, nextAbsoluteAngle) - 360;
+        chargingRelativeAngle = relativeAngleDifference(shipAngle, chargingAbsoluteAngle);
         //  charging checkpoint
-        chargingAbsoluteAngle = chargingTang;
-        chargingRelativeAngle = getRelativeAngleDifference(shipAngle, chargingAbsoluteAngle);
         //
+
+        //if ((relativeAngleDifference > 180 || relativeAngleDifference < -180) || (chargingRelativeAngleDifference > 180 || chargingRelativeAngleDifference < -180) || (chargingRelativeAngleDifference > 180 || chargingRelativeAngleDifference < -180) ){
+        //    relativeAngle = -relativeAngleDifference;
+        //    nextRelativeAngle = -nextRelativeAngleDifference;
+        //    chargingRelativeAngle = -chargingRelativeAngleDifference;
+        //} else {
+        //    relativeAngle = relativeAngleDifference;
+        //    nextRelativeAngle = nextRelativeAngleDifference;
+        //    chargingRelativeAngle = chargingRelativeAngleDifference;
+        //}
 
         // END TEMPORARY VARIABLES ARE
 
@@ -179,12 +210,10 @@ public class  Student4 extends PodPlugIn {
         // Otherwise continue as normal
         if (getUpdateChargingMode(getShipBatteryLevel())) {
             // If the battery is above 30% go to Charging CheckPoint
-            turn(chargingRelativeAngle);
-            accelerateOrBrake(goToChargingCheckpoint(shipPositionX, chargingCheckPointX));
+            accelerateOrBrake(goToChargingCheckpoint());
         } else {
             // If the battery is above 30%, go to a normal checkpoint
-            turn(relativeAngle);
-            accelerateOrBrake(goToCheckpoint(shipPositionX, checkPointX, shipPositionY,  checkPointY));
+            accelerateOrBrake(goToCheckpoint());
         }
 
         //
