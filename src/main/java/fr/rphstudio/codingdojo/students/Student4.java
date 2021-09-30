@@ -119,11 +119,14 @@ public class  Student4 extends PodPlugIn {
         float shipPositionX = getShipPositionX();
         float shipPositionY = getShipPositionY();
 
+        float shipAngle = getShipAngle(getShipIndex());
+
         //  normal check point
         float absoluteAngle = getAbsoluteAngleFromPositions(shipPositionX, shipPositionY, checkPointX, checkPointY);
+        float relativeAngle = getRelativeAngleDifference(shipAngle, absoluteAngle);
         //  charging checkpoint
         float chargingAbsoluteAngle = getAbsoluteAngleFromPositions(shipPositionX, shipPositionY, chargingCheckPointX, chargingCheckPointY);
-
+        float chargingRelativeAngle = getRelativeAngleDifference(shipAngle, chargingAbsoluteAngle);
         //
         // END TEMPORARY VARIABLES ARE
         // -------------------------------------------------------
@@ -134,20 +137,11 @@ public class  Student4 extends PodPlugIn {
         // Otherwise continue as normal
         if (getUpdateChargingMode(getShipBatteryLevel())) {
             // If the battery is above 30% go to Charging CheckPoint
-            turnToAngle(chargingAbsoluteAngle);
-
-            // Coordonées de notre SpaceShip
-            // getShipPositionX()
-            // getShipPositionY()
-
-            // Coordonées de la batterie
-            // chargingCheckPointX
-            // chargingCheckPointY
-
+            turn(chargingRelativeAngle);
             accelerateOrBrake(goToChargingCheckpoint(getShipPositionX(), chargingCheckPointX));
         } else {
             // If the battery is above 30%, go to a normal checkpoint
-            turnToAngle(absoluteAngle);
+            turn(relativeAngle);
             accelerateOrBrake(goToCheckpoint(getShipPositionX(), checkPointX, getShipPositionY(),  checkPointY));
         }
 
@@ -159,6 +153,8 @@ public class  Student4 extends PodPlugIn {
         // DEBUG AREA
         //
 
+        System.out.println("getNbShips: " + getNbShips());
+        System.out.println("getShipIndex: " + getShipIndex());
         // System.out.println("X " + shipBatteryRadiusX(getShipPositionX(), getCheckPointX(checkPointCharging(getNbRaceCheckPoints()))) + " | Y " + getCheckPointY(checkPointCharging(getNbRaceCheckPoints())));
 
         //
