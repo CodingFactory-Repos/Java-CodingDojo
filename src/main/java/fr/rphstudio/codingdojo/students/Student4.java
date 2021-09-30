@@ -13,7 +13,7 @@ import fr.rphstudio.codingdojo.game.PodPlugIn;
  *
  * @author Romuald GRIGNON
  */
-public class Student4 extends PodPlugIn {
+public class  Student4 extends PodPlugIn {
     public Student4(Pod p) {
         super(p);
     }
@@ -103,26 +103,52 @@ public class Student4 extends PodPlugIn {
         selectShip(1);
         setPlayerColor(247, 143, 179, 255); // Color of Spaceship
 
+        // -------------------------------------------------------
+        // TEMPORARY VARIABLES
+        //
+
+        // normal check point variables (return positions)
+        float checkPointX = getCheckPointX(getNextCheckPointIndex());
+        float checkPointY = getCheckPointY(getNextCheckPointIndex());
+
+        // charging checkpoint variables (return positions)
+        float chargingCheckPointX = getCheckPointX(checkPointCharging(getNbRaceCheckPoints()));
+        float chargingCheckPointY = getCheckPointY(checkPointCharging(getNbRaceCheckPoints()));
+
+        // ship position ( float x , y )
+        float shipPositionX = getShipPositionX();
+        float shipPositionY = getShipPositionY();
+
+        //  normal check point
+        float absoluteAngle = getAbsoluteAngleFromPositions(shipPositionX, shipPositionY, checkPointX, checkPointY);
+        //  charging checkpoint
+        float chargingAbsoluteAngle = getAbsoluteAngleFromPositions(shipPositionX, shipPositionY, chargingCheckPointX, chargingCheckPointY);
+
+        //
+        // END TEMPORARY VARIABLES ARE
+        // -------------------------------------------------------
+
+
         // Check if the battery is below 30%.
         // If battery < 30% go to Charging CheckPoint
         // Otherwise continue as normal
         if (getUpdateChargingMode(getShipBatteryLevel())) {
             // If the battery is above 30% go to Charging CheckPoint
-            turnTowardPosition(getCheckPointX(checkPointCharging(getNbRaceCheckPoints())), getCheckPointY(checkPointCharging(getNbRaceCheckPoints())));
+            turnToAngle(chargingAbsoluteAngle);
 
             // Coordonées de notre SpaceShip
-            // getShipPositionX
-            // getShipPositionY
+            // getShipPositionX()
+            // getShipPositionY()
 
             // Coordonées de la batterie
-            // getCheckPointX(checkPointCharging(getNbRaceCheckPoints()))
-            // getCheckPointY(checkPointCharging(getNbRaceCheckPoints()))
+            // chargingCheckPointX
+            // chargingCheckPointY
 
-            accelerateOrBrake(goToChargingCheckpoint(getShipPositionX(), getCheckPointX(checkPointCharging(getNbRaceCheckPoints()))));
+            accelerateOrBrake(goToChargingCheckpoint(getShipPositionX(), chargingCheckPointX));
         } else {
             // If the battery is above 30%, go to a normal checkpoint
-            turnTowardPosition(getCheckPointX(getNextCheckPointIndex()), getCheckPointY(getNextCheckPointIndex()));
-            accelerateOrBrake(goToCheckpoint(getShipPositionX(), getCheckPointX(getNextCheckPointIndex()), getShipPositionY(),  getCheckPointY(getNextCheckPointIndex())));
+            turnToAngle(absoluteAngle);
+            accelerateOrBrake(goToCheckpoint(getShipPositionX(), checkPointX, getShipPositionY(),  checkPointY));
         }
 
         //
