@@ -61,7 +61,7 @@ public class  Student4 extends PodPlugIn {
             return -1f;
         } else if (radius <= 0.50 && radius >= -0.50){ // If the radius is between 0.75 and -0.75
             return 0.1f;
-        } else if (radius <= 0.75 && radius >= -0.75){ // If the radius is between 0.75 and -0.75
+        } else if (radius <= 1 && radius >= -1){ // If the radius is between 0.75 and -0.75
             return 0.5f;
         }
 
@@ -72,21 +72,21 @@ public class  Student4 extends PodPlugIn {
         float radiusX = xShip - xCheckpoint;
         float radiusY = yShip - yCheckpoint;
 
-        //if (radiusX <= 0.20 && radiusX >= -0.20 && radiusY <= 0.20 && radiusY >= -0.20){ // If the radius is between 0.75 and -0.75
-        //    System.out.println("-1f " + radiusX + ":" + radiusY);
-        //    return -1f;
-        //} else if (radiusX <= 0.75 && radiusX >= -0.75 && radiusY <= 0.75 && radiusY >= -0.75){
-        //    System.out.println("0.05f " + radiusX + ":" + radiusY);
-        //    return 0.05f;
-        //} else if (radiusX <= 0.85 && radiusX >= -0.85 && radiusY <= 0.85 && radiusY >= -0.85){ // If the radius is between 0.75 and -0.75
-        //    System.out.println("-0.5f " + radiusX + ":" + radiusY);
-        //    return -0.9f;
-        //} else if (radiusX <= 1.5 && radiusX >= -0.5 && radiusY <= 0.5 && radiusY >= -0.5){
-        //    System.out.println("0.75f " + radiusX + ":" + radiusY);
-        //    return 0.75f;
-        //}
+        if (radiusX <= 0.50 && radiusX >= -0.50 && radiusY <= 0.50 && radiusY >= -0.50){ // If the radius is between 0.75 and -0.75
+            System.out.println("-0.5f " + radiusX + ":" + radiusY);
+            return -0.5f;
+        } else if (radiusX <= 1 && radiusX >= -1 && radiusY <= 1 && radiusY >= -1){
+            System.out.println("0.05f " + radiusX + ":" + radiusY);
+            return 0.05f;
+        } else if (radiusX <= 2 && radiusX >= -2 && radiusY <= 2 && radiusY >= -2){ // If the radius is between 0.75 and -0.75
+            System.out.println("0.30f " + radiusX + ":" + radiusY);
+            return 0.30f;
+        } else if (radiusX <= 2.5 && radiusX >= -2.5 && radiusY <= 2.5 && radiusY >= -2.5){
+            System.out.println("0.75f " + radiusX + ":" + radiusY);
+            return 0.75f;
+        }
 
-        return 0.8f;
+        return 1f;
     }
 
     //
@@ -138,11 +138,11 @@ public class  Student4 extends PodPlugIn {
         if (getUpdateChargingMode(getShipBatteryLevel())) {
             // If the battery is above 30% go to Charging CheckPoint
             turn(chargingRelativeAngle);
-            accelerateOrBrake(goToChargingCheckpoint(getShipPositionX(), chargingCheckPointX));
+            accelerateOrBrake(goToChargingCheckpoint(shipPositionX, chargingCheckPointX));
         } else {
             // If the battery is above 30%, go to a normal checkpoint
             turn(relativeAngle);
-            accelerateOrBrake(goToCheckpoint(getShipPositionX(), checkPointX, getShipPositionY(),  checkPointY));
+            accelerateOrBrake(goToCheckpoint(shipPositionX, checkPointX, shipPositionY,  checkPointY));
         }
 
         //
@@ -153,8 +153,8 @@ public class  Student4 extends PodPlugIn {
         // DEBUG AREA
         //
 
-        System.out.println("getNbShips: " + getNbShips());
-        System.out.println("getShipIndex: " + getShipIndex());
+        // System.out.println("getNbShips: " + getNbShips());
+        // System.out.println("getShipIndex: " + getShipIndex());
         // System.out.println("X " + shipBatteryRadiusX(getShipPositionX(), getCheckPointX(checkPointCharging(getNbRaceCheckPoints()))) + " | Y " + getCheckPointY(checkPointCharging(getNbRaceCheckPoints())));
 
         //
