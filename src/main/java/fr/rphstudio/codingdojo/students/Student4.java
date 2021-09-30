@@ -23,6 +23,25 @@ public class  Student4 extends PodPlugIn {
     //
 
     public static boolean needForRecharge = false;
+    public static float checkPointX;
+    public static float checkPointY;
+
+    public static float chargingCheckPointX;
+    public static float chargingCheckPointY;
+
+    public static float shipPositionX;
+    public static float shipPositionY;
+
+    public static float shipAngle;
+
+    public static float tang;
+    public static float chargingTang;
+
+    public static float absoluteAngle;
+    public static float relativeAngle;
+
+    public static float chargingAbsoluteAngle;
+    public static float chargingRelativeAngle;
 
     // Create updateChargingMode function to check if battery
     public boolean getUpdateChargingMode(float a) {
@@ -57,36 +76,54 @@ public class  Student4 extends PodPlugIn {
     public float goToChargingCheckpoint(float xShip, float xCheckpoint){
         float radius = xShip - xCheckpoint;
 
-        if (radius <= 0.20 && radius >= -0.20){ // If the radius is between 0.75 and -0.75
-            return -1f;
-        } else if (radius <= 0.50 && radius >= -0.50){ // If the radius is between 0.75 and -0.75
-            return 0.1f;
-        } else if (radius <= 1 && radius >= -1){ // If the radius is between 0.75 and -0.75
-            return 0.5f;
+        double[][] speed = { { 0.2, -1f }, { 0.5, 0.1f }, { 1, 0.5f } };
+
+        for (int i = 0; i < speed.length; i++){
+            if (radius <= speed[i][0] && radius >= -speed[i][0]){ // If the radius is between 0.75 and -0.75
+                System.out.println(speed[i][1] + "f " + radius);
+                return (float) speed[i][1];
+            }
         }
 
         return 1f;
+
+        //if (radius <= 0.20 && radius >= -0.20){ // If the radius is between 0.75 and -0.75
+        //    return -1f;
+        //} else if (radius <= 0.50 && radius >= -0.50){ // If the radius is between 0.75 and -0.75
+        //    return 0.1f;
+        //} else if (radius <= 1 && radius >= -1){ // If the radius is between 0.75 and -0.75
+        //    return 0.5f;
+        //}
     }
 
     public float goToCheckpoint(float xShip, float xCheckpoint, float yShip, float yCheckpoint){
         float radiusX = xShip - xCheckpoint;
         float radiusY = yShip - yCheckpoint;
 
-        if (radiusX <= 0.50 && radiusX >= -0.50 && radiusY <= 0.50 && radiusY >= -0.50){ // If the radius is between 0.75 and -0.75
-            System.out.println("-0.5f " + radiusX + ":" + radiusY);
-            return -0.5f;
-        } else if (radiusX <= 1 && radiusX >= -1 && radiusY <= 1 && radiusY >= -1){
-            System.out.println("0.05f " + radiusX + ":" + radiusY);
-            return 0.05f;
-        } else if (radiusX <= 2 && radiusX >= -2 && radiusY <= 2 && radiusY >= -2){ // If the radius is between 0.75 and -0.75
-            System.out.println("0.30f " + radiusX + ":" + radiusY);
-            return 0.30f;
-        } else if (radiusX <= 2.5 && radiusX >= -2.5 && radiusY <= 2.5 && radiusY >= -2.5){
-            System.out.println("0.75f " + radiusX + ":" + radiusY);
-            return 0.75f;
+        double[][] speed = { { 0.5, -0.5f }, { 1, 0.05f }, { 2, 0.20f }, { 2.5, 0.30f }, { 3, 0.50 } };
+
+        for (int i = 0; i < speed.length; i++){
+            if (radiusX <= speed[i][0] && radiusX >= -speed[i][0] && radiusY <= speed[i][0] && radiusY >= -speed[i][0]){ // If the radius is between 0.75 and -0.75
+                System.out.println(speed[i][1] + "f " + radiusX + ":" + radiusY);
+                return (float) speed[i][1];
+            }
         }
 
         return 1f;
+
+        //if (radiusX <= 0.50 && radiusX >= -0.50 && radiusY <= 0.50 && radiusY >= -0.50){ // If the radius is between 0.75 and -0.75
+        //    System.out.println("-0.5f " + radiusX + ":" + radiusY);
+        //    return -0.5f;
+        //} else if (radiusX <= 1 && radiusX >= -1 && radiusY <= 1 && radiusY >= -1){
+        //    System.out.println("0.05f " + radiusX + ":" + radiusY);
+        //    return 0.05f;
+        //} else if (radiusX <= 2 && radiusX >= -2 && radiusY <= 2 && radiusY >= -2){ // If the radius is between 0.75 and -0.75
+        //    System.out.println("0.30f " + radiusX + ":" + radiusY);
+        //    return 0.30f;
+        //} else if (radiusX <= 2.5 && radiusX >= -2.5 && radiusY <= 2.5 && radiusY >= -2.5){
+        //    System.out.println("0.75f " + radiusX + ":" + radiusY);
+        //    return 0.75f;
+        //}
     }
 
     //
@@ -107,30 +144,35 @@ public class  Student4 extends PodPlugIn {
         // TEMPORARY VARIABLES
         //
 
+
         // normal check point variables (return positions)
-        float checkPointX = getCheckPointX(getNextCheckPointIndex());
-        float checkPointY = getCheckPointY(getNextCheckPointIndex());
+        checkPointX = getCheckPointX(getNextCheckPointIndex());
+        checkPointY = getCheckPointY(getNextCheckPointIndex());
 
         // charging checkpoint variables (return positions)
-        float chargingCheckPointX = getCheckPointX(checkPointCharging(getNbRaceCheckPoints()));
-        float chargingCheckPointY = getCheckPointY(checkPointCharging(getNbRaceCheckPoints()));
+        chargingCheckPointX = getCheckPointX(checkPointCharging(getNbRaceCheckPoints()));
+        chargingCheckPointY = getCheckPointY(checkPointCharging(getNbRaceCheckPoints()));
 
         // ship position ( float x , y )
-        float shipPositionX = getShipPositionX();
-        float shipPositionY = getShipPositionY();
+        shipPositionX = getShipPositionX();
+        shipPositionY = getShipPositionY();
 
-        float shipAngle = getShipAngle(getShipIndex());
+        shipAngle = getShipAngle(getShipIndex());
+
+        tang =  atan2(checkPointY-shipPositionY , checkPointX-shipPositionX);
+        chargingTang =  atan2(chargingCheckPointY-shipPositionY , chargingCheckPointX-shipPositionX);
+        //tang =  atan2(checkPointY-shipPositionY , checkPointX-shipPositionX);
+
 
         //  normal check point
-        float absoluteAngle = getAbsoluteAngleFromPositions(shipPositionX, shipPositionY, checkPointX, checkPointY);
-        float relativeAngle = getRelativeAngleDifference(shipAngle, absoluteAngle);
+        absoluteAngle =  tang;
+        relativeAngle = getRelativeAngleDifference(shipAngle, absoluteAngle);
         //  charging checkpoint
-        float chargingAbsoluteAngle = getAbsoluteAngleFromPositions(shipPositionX, shipPositionY, chargingCheckPointX, chargingCheckPointY);
-        float chargingRelativeAngle = getRelativeAngleDifference(shipAngle, chargingAbsoluteAngle);
+        chargingAbsoluteAngle = chargingTang;
+        chargingRelativeAngle = getRelativeAngleDifference(shipAngle, chargingAbsoluteAngle);
         //
-        // END TEMPORARY VARIABLES ARE
-        // -------------------------------------------------------
 
+        // END TEMPORARY VARIABLES ARE
 
         // Check if the battery is below 30%.
         // If battery < 30% go to Charging CheckPoint
