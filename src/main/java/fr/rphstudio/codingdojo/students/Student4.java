@@ -49,7 +49,9 @@ public class  Student4 extends PodPlugIn {
     public static float chargingRelativeAngle;
 
     // Create updateChargingMode function to check if battery
-    public boolean getUpdateChargingMode(float a) {
+    public boolean getUpdateChargingMode() {
+        float a = getShipBatteryLevel();
+
         if(a <= 15 && !needForRecharge){
             needForRecharge = true;
             return true;
@@ -81,7 +83,7 @@ public class  Student4 extends PodPlugIn {
     public float goToChargingCheckpoint(){
         float radius = shipPositionX - chargingCheckPointX;
 
-        double[][] speed = { { 0.1, -1f }, { 0.5, 0.05f }, { 1, 0.5f }, {5, 0.6} };
+        double[][] speed = { { 0.05, -1f }, { 0.5, 0.05f }, { 1, 0.5f }, {5, 0.6} };
 
         if(radius <= speed[0][0] && radius >= -speed[0][0]){
             turn(relativeAngle);
@@ -103,7 +105,7 @@ public class  Student4 extends PodPlugIn {
         float radiusX = shipPositionX - checkPointX;
         float radiusY = shipPositionY - checkPointY;
 
-        double[][] speed = { { 0.5, -0.9f }, {1, -0.5f} };
+        double[][] speed = { {0.01, -0.1f}, { 0.5, 0.05f }, {1, 0.1f}, {5, 0.4f} };
 
         //if(radiusX <= 1 && radiusX >= -1 && radiusY <= 1 && radiusY >= -1){
         //    turn(nextRelativeAngle);
@@ -145,7 +147,7 @@ public class  Student4 extends PodPlugIn {
         // WRITE YOUR OWN CODE HERE
         //
 
-        setPlayerName("Bebou"); // Name of Spaceship
+        setPlayerName("Bebouuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"); // Name of Spaceship
         selectShip(1);
         setPlayerColor(247, 143, 179, 255); // Color of Spaceship
 
@@ -179,8 +181,6 @@ public class  Student4 extends PodPlugIn {
         relativeAngleDifference = (absoluteAngle - shipAngle) ;
         nextRelativeAngleDifference = (nextAbsoluteAngle - shipAngle) ;
         chargingRelativeAngleDifference = (chargingAbsoluteAngle - shipAngle);
-        //tang =  atan2(checkPointY-shipPositionY , checkPointX-shipPositionX);
-
 
         //  normal check point
         absoluteAngle = atan2(checkPointY-shipPositionY , checkPointX-shipPositionX);
@@ -190,29 +190,16 @@ public class  Student4 extends PodPlugIn {
         relativeAngle = relativeAngleDifference(shipAngle, absoluteAngle);
         nextRelativeAngle = relativeAngleDifference(shipAngle, nextAbsoluteAngle) - 360;
         chargingRelativeAngle = relativeAngleDifference(shipAngle, chargingAbsoluteAngle);
-        //  charging checkpoint
-        //
-
-        //if ((relativeAngleDifference > 180 || relativeAngleDifference < -180) || (chargingRelativeAngleDifference > 180 || chargingRelativeAngleDifference < -180) || (chargingRelativeAngleDifference > 180 || chargingRelativeAngleDifference < -180) ){
-        //    relativeAngle = -relativeAngleDifference;
-        //    nextRelativeAngle = -nextRelativeAngleDifference;
-        //    chargingRelativeAngle = -chargingRelativeAngleDifference;
-        //} else {
-        //    relativeAngle = relativeAngleDifference;
-        //    nextRelativeAngle = nextRelativeAngleDifference;
-        //    chargingRelativeAngle = chargingRelativeAngleDifference;
-        //}
-
         // END TEMPORARY VARIABLES ARE
 
-        // Check if the battery is below 30%.
-        // If battery < 30% go to Charging CheckPoint
+        // Check if the battery is below 15%.
+        // If battery < 15% go to Charging CheckPoint
         // Otherwise continue as normal
-        if (getUpdateChargingMode(getShipBatteryLevel())) {
-            // If the battery is above 30% go to Charging CheckPoint
+        if (getUpdateChargingMode()) {
+            // If the battery is above 15% go to Charging CheckPoint
             accelerateOrBrake(goToChargingCheckpoint());
         } else {
-            // If the battery is above 30%, go to a normal checkpoint
+            // If the battery is above 15%, go to a normal checkpoint
             accelerateOrBrake(goToCheckpoint());
         }
 
