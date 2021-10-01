@@ -49,6 +49,8 @@ public class  Student4 extends PodPlugIn {
     public static float chargingAbsoluteAngle;
     public static float chargingRelativeAngle;
 
+    public static float checkPointDist;
+
     // Create updateChargingMode function to check if battery
     public boolean getUpdateChargingMode() {
         float a = getShipBatteryLevel();
@@ -78,28 +80,26 @@ public class  Student4 extends PodPlugIn {
     //}
 
     public float goToChargingCheckpoint(){
-        float radius = shipPositionX - chargingCheckPointX;
+        float radiusX = shipPositionX - chargingCheckPointX;
+        float radiusY = shipPositionY - chargingCheckPointY;
 
-        double[][] speed = { { 0.05, -1f }, { 0.5, 0.05f }, { 1, 0.3f }, {5, 0.2f} };
-
-        if(radius <= speed[0][0] && radius >= -speed[0][0]){
-            turn(relativeAngle);
-        } else {
-            turn(chargingRelativeAngle);
-        }
-
-        for (double[] doubles : speed) {
-            if (radius <= doubles[0] && radius >= -doubles[0]) { // If the radius is between 0.75 and -0.75
-                System.out.println(doubles[1] + "f " + radius);
-                return (float) doubles[1];
+        if(distanceBetweenPositions(chargingCheckPointX, chargingCheckPointY) > ((this.getShipSpeed() * this.getShipSpeed()) / 5f)){
+            if(radiusX <= 0.30 && radiusX >= -0.30 && radiusY <= 0.30 && radiusY >= -0.30){
+                turn(relativeAngle);
+                return -1f;
+            } else {
+                turn(chargingRelativeAngle);
+                return 1f;
             }
         }
 
-        return 1f;
+        turn(relativeAngle);
+
+        return -1f;
     }
 
     public float goToCheckpoint(){
-        if(distanceBetweenPositions() > ((this.getShipSpeed() * this.getShipSpeed()) / 10f)){
+        if(distanceBetweenPositions(checkPointX, checkPointY) > ((this.getShipSpeed() * this.getShipSpeed()) / 10f)){
             turn(relativeAngle);
             return 1f;
         }
@@ -121,9 +121,9 @@ public class  Student4 extends PodPlugIn {
         return radius;
     }
 
-    public float distanceBetweenPositions(){
-        float positionX = shipPositionX - checkPointX;
-        float positionY = shipPositionY - checkPointY;
+    public float distanceBetweenPositions(float a, float b){
+        float positionX = shipPositionX - a;
+        float positionY = shipPositionY - b;
 
         float convertX = positionX * positionX;
         float convertY = positionY * positionY;
@@ -137,10 +137,13 @@ public class  Student4 extends PodPlugIn {
 
     @Override
     public void process(int delta) {
+        // Clear Console
+        System.out.print("\033[H\033[2J");
+
         // -------------------------------------------------------
         // WRITE YOUR OWN CODE HERE
         //
-        setPlayerName("Bebou " + getShipSpeed()); // Name of Spaceship
+        setPlayerName("Bebou"); // Name of Spaceship
         selectShip(1);
         setPlayerColor(247, 143, 179, 255); // Color of Spaceship
 
@@ -183,6 +186,8 @@ public class  Student4 extends PodPlugIn {
         relativeAngle = relativeAngleDifference(shipAngle, absoluteAngle);
         nextRelativeAngle = relativeAngleDifference(shipAngle, nextAbsoluteAngle);
         chargingRelativeAngle = relativeAngleDifference(shipAngle, chargingAbsoluteAngle);
+
+        checkPointDist = checkPointX + checkPointY - shipPositionX - shipPositionX;
         // END TEMPORARY VARIABLES ARE
 
         // Check if the battery is below 15%.
@@ -192,8 +197,26 @@ public class  Student4 extends PodPlugIn {
             // If the battery is above 15% go to Charging CheckPoint
             accelerateOrBrake(goToChargingCheckpoint());
         } else {
-            // If the battery is above 15%, go to a normal checkpoint
-            accelerateOrBrake(goToCheckpoint());
+            if(chargingCheckPointX == checkPointX && chargingCheckPointY == checkPointY){
+                if(getShipBatteryLevel() <= 40){
+                    System.out.println("ChargingCheckPointX : " + chargingCheckPointX + " : " + checkPointX + " | " + chargingCheckPointY + " | " + checkPointY);
+
+                    needForRecharge = true;
+                    accelerateOrBrake(goToChargingCheckpoint());
+                } else {
+                    if ((getShipBoostLevel() == 100 && getShipSpeed() < 1) || (getShipBoostLevel() == 100 && checkPointDist > 12)) {
+                        useBoost();
+                    }
+
+                    accelerateOrBrake(goToCheckpoint());
+                }
+            } else {
+                if ((getShipBoostLevel() == 100 && getShipSpeed() < 1) || (getShipBoostLevel() == 100 && checkPointDist > 12)) {
+                    useBoost();
+                }
+
+                accelerateOrBrake(goToCheckpoint());
+            }
 
             if(getShipSpeed() == 0){
                 accelerateOrBrake(1f);
