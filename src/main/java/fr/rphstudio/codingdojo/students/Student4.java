@@ -143,7 +143,7 @@ public class  Student4 extends PodPlugIn {
         // -------------------------------------------------------
         // WRITE YOUR OWN CODE HERE
         //
-        setPlayerName("Bebou " + getShipSpeed()); // Name of Spaceship
+        setPlayerName("Bebou"); // Name of Spaceship
         selectShip(1);
         setPlayerColor(247, 143, 179, 255); // Color of Spaceship
 
