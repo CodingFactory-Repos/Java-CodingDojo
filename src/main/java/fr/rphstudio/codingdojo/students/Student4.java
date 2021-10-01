@@ -23,6 +23,7 @@ public class  Student4 extends PodPlugIn {
     //
 
     public static boolean needForRecharge = false;
+    public static boolean needSpeed = true;
     public static float checkPointX;
     public static float checkPointY;
     public static float nextCheckPointX;
@@ -58,11 +59,7 @@ public class  Student4 extends PodPlugIn {
         } else if(a >= 98 && needForRecharge){
             needForRecharge = false;
             return false;
-        } else if(needForRecharge){
-            return true;
-        } else {
-            return false;
-        }
+        } else return needForRecharge;
     }
     
     // Create checkPointCharging function to check if the CheckPoint is chargeable 
@@ -76,14 +73,14 @@ public class  Student4 extends PodPlugIn {
     }
 
     // Create a ShipBatteryRadius function that will allow to have the coordinates between the SpaceShip and the Battery CheckPoint
-    public float shipBatteryRadiusX(float x0, float x1){
-        return x0 - x1;
-    }
+    // public float shipBatteryRadiusX(float x0, float x1){
+    //    return x0 - x1;
+    //}
 
     public float goToChargingCheckpoint(){
         float radius = shipPositionX - chargingCheckPointX;
 
-        double[][] speed = { { 0.05, -1f }, { 0.5, 0.05f }, { 1, 0.5f }, {5, 0.6} };
+        double[][] speed = { { 0.05, -1f }, { 0.5, 0.05f }, { 1, 0.3f }, {5, 0.2f} };
 
         if(radius <= speed[0][0] && radius >= -speed[0][0]){
             turn(relativeAngle);
@@ -91,10 +88,10 @@ public class  Student4 extends PodPlugIn {
             turn(chargingRelativeAngle);
         }
 
-        for (int i = 0; i < speed.length; i++){
-            if (radius <= speed[i][0] && radius >= -speed[i][0]){ // If the radius is between 0.75 and -0.75
-                System.out.println(speed[i][1] + "f " + radius);
-                return (float) speed[i][1];
+        for (double[] doubles : speed) {
+            if (radius <= doubles[0] && radius >= -doubles[0]) { // If the radius is between 0.75 and -0.75
+                System.out.println(doubles[1] + "f " + radius);
+                return (float) doubles[1];
             }
         }
 
@@ -102,26 +99,13 @@ public class  Student4 extends PodPlugIn {
     }
 
     public float goToCheckpoint(){
-        float radiusX = shipPositionX - checkPointX;
-        float radiusY = shipPositionY - checkPointY;
-
-        double[][] speed = { {0.01, -0.1f}, { 0.5, 0.05f }, {1, 0.1f}, {5, 0.4f} };
-
-        //if(radiusX <= 1 && radiusX >= -1 && radiusY <= 1 && radiusY >= -1){
-        //    turn(nextRelativeAngle);
-        //   return  -0.75f;
-        //} else {
+        if(distanceBetweenPositions() > ((this.getShipSpeed() * this.getShipSpeed()) / 10f)){
             turn(relativeAngle);
-        //}
-
-        for(int i = 0; i < speed.length; i++){
-            if (radiusX <= speed[i][0] && radiusX >= -speed[i][0] && radiusY <= speed[i][0] && radiusY >= -speed[i][0]){ // If the radius is between 0.75 and -0.75
-                System.out.println(speed[i][1] + "f " + radiusX + ":" + radiusY);
-                return (float) speed[i][1];
-            }
+            return 1f;
         }
 
-        return 1f;
+        turn(nextRelativeAngle);
+        return -1f;
     }
 
     public float relativeAngleDifference(float a, float b) {
@@ -137,6 +121,16 @@ public class  Student4 extends PodPlugIn {
         return radius;
     }
 
+    public float distanceBetweenPositions(){
+        float positionX = shipPositionX - checkPointX;
+        float positionY = shipPositionY - checkPointY;
+
+        float convertX = positionX * positionX;
+        float convertY = positionY * positionY;
+
+        return this.sqrt(convertY + convertX);
+    }
+
     //
     // END OF VARIABLES/FUNCTIONS AREA
     // -------------------------------------------------------
@@ -146,8 +140,7 @@ public class  Student4 extends PodPlugIn {
         // -------------------------------------------------------
         // WRITE YOUR OWN CODE HERE
         //
-
-        setPlayerName("Bebouuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"); // Name of Spaceship
+        setPlayerName("Bebou " + getShipSpeed()); // Name of Spaceship
         selectShip(1);
         setPlayerColor(247, 143, 179, 255); // Color of Spaceship
 
@@ -188,7 +181,7 @@ public class  Student4 extends PodPlugIn {
         chargingAbsoluteAngle = atan2(chargingCheckPointY-shipPositionY , chargingCheckPointX-shipPositionX);
 
         relativeAngle = relativeAngleDifference(shipAngle, absoluteAngle);
-        nextRelativeAngle = relativeAngleDifference(shipAngle, nextAbsoluteAngle) - 360;
+        nextRelativeAngle = relativeAngleDifference(shipAngle, nextAbsoluteAngle);
         chargingRelativeAngle = relativeAngleDifference(shipAngle, chargingAbsoluteAngle);
         // END TEMPORARY VARIABLES ARE
 
@@ -201,6 +194,10 @@ public class  Student4 extends PodPlugIn {
         } else {
             // If the battery is above 15%, go to a normal checkpoint
             accelerateOrBrake(goToCheckpoint());
+
+            if(getShipSpeed() == 0){
+                accelerateOrBrake(1f);
+            }
         }
 
         //
